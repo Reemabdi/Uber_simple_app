@@ -35,6 +35,7 @@ function TabNavigator({ username }) {
         headerShown: false,
       })}
     >
+
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Services" component={ServicesScreen} />
       <Tab.Screen name="Activity" component={ActivityScreen} />
@@ -82,7 +83,7 @@ export default function App() {
         <Stack.Screen
           name="ChooseRide"
           component={ChooseRideScreen}
-          options={{ title: 'Choose a Ride' }}
+          options={{ title: 'Choose a car aa' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
