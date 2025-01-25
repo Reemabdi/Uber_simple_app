@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function CarRegistrationScreen({ route, navigation }) {
-  const { selectedLocation } = route.params; // استلام الموقع المحدد
+export default function CarRegistrationScreen({ navigation }) {
   const [carBrand, setCarBrand] = useState('');
   const [carModel, setCarModel] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
@@ -10,13 +9,13 @@ export default function CarRegistrationScreen({ route, navigation }) {
   const [seats, setSeats] = useState(4);
 
   const handleSubmit = () => {
-    if (!carBrand || !carModel || !plateNumber || !carColor) {
-      Alert.alert('Error', 'Please fill in all fields.');
-      return;
-    }
-
-    const carInfo = { carBrand, carModel, plateNumber, carColor, seats, selectedLocation };
-    navigation.navigate('LookForPassenger', { carInfo });
+    const carInfo = { carBrand, carModel, plateNumber, carColor, seats };
+    navigation.navigate('LocationSelectionScreen', {
+      carInfo,
+      onLocationConfirm: (location) => {
+        navigation.navigate('LookForPassenger', { carInfo, selectedLocation: location });
+      },
+    });
   };
 
   return (

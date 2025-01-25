@@ -1,38 +1,68 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function CarRegistrationScreen({ route, navigation }) {
-  const { onCarInfoSubmit } = route.params;
-  const [carBrand, setCarBrand] = useState('');
-  const [carModel, setCarModel] = useState('');
-  const [plateNumber, setPlateNumber] = useState('');
-  const [carColor, setCarColor] = useState('');
-  const [seats, setSeats] = useState(4);
+export default function ChooseRideScreen({ route }) {
+  const { carInfo, selectedLocation } = route.params || {};
 
-  const handleSubmit = () => {
-    const carInfo = { carBrand, carModel, plateNumber, carColor, seats };
-    onCarInfoSubmit(carInfo); // إرسال معلومات السيارة إلى الشاشة السابقة
-    navigation.navigate('LookForPassenger', { carInfo }); // الانتقال إلى LookForPassenger بعد التسجيل
-  };
+  const rides = [
+    { id: '1', title: 'Comfort', price: 'SAR 82.91', time: '7 min away', seats: 4 },
+    { id: '2', title: 'UberXL', price: 'SAR 79.80', time: '12 min away', seats: 6 },
+    { id: '3', title: 'Black', price: 'SAR 110.99', time: '5 min away', seats: 4 },
+    { id: '4', title: 'UberX Saver', price: 'SAR 57.95', time: '10 min away', seats: 4 },
+  ];
+
+  if (carInfo) {
+    rides.push({
+      id: '5',
+      title: `${carInfo.carBrand} ${carInfo.carModel} (Your Car)`,
+      price: 'Registered Car',
+      time: 'Available Now',
+      seats: carInfo.seats || 4,
+    });
+  }
+
+  const renderRide = ({ item }) => (
+    <TouchableOpacity style={styles.rideItem}>
+      <View style={styles.rideInfo}>
+        <Icon name="car" size={30} color="#007bff" style={styles.rideIcon} />
+        <View>
+          <Text style={styles.rideTitle}>{item.title}</Text>
+          <Text>{`${item.time} • ${item.seats} seats`}</Text>
+        </View>
+      </View>
+      <Text style={styles.ridePrice}>{item.price}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Register Your Car</Text>
-      <TextInput style={styles.input} placeholder="Car Brand" value={carBrand} onChangeText={setCarBrand} />
-      <TextInput style={styles.input} placeholder="Car Model" value={carModel} onChangeText={setCarModel} />
-      <TextInput style={styles.input} placeholder="Plate Number" value={plateNumber} onChangeText={setPlateNumber} />
-      <TextInput style={styles.input} placeholder="Car Color" value={carColor} onChangeText={setCarColor} />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>Choose a Ride</Text>
+      <FlatList
+        data={rides}
+        renderItem={renderRide}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-  input: { backgroundColor: '#f2f2f2', padding: 15, marginBottom: 15, borderRadius: 10 },
-  button: { backgroundColor: '#007bff', padding: 15, alignItems: 'center', borderRadius: 10 },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
+  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  list: { marginTop: 10 },
+  rideItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  rideInfo: { flexDirection: 'row', alignItems: 'center' },
+  rideIcon: { marginRight: 15 },
+  rideTitle: { fontSize: 18, fontWeight: 'bold' },
+  ridePrice: { fontSize: 16, fontWeight: 'bold', color: '#007bff' },
 });

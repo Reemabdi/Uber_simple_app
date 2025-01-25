@@ -59,19 +59,9 @@ export default function DashboardScreen() {
         }
         setCarInfo(info);
         navigation.navigate('LocationSelectionScreen', {
+          carInfo: info,
           onLocationConfirm: (location) => {
-            if (!location) {
-              Alert.alert('Error', 'Location is required.');
-              return;
-            }
-            setSelectedLocation(location);
-            navigation.navigate('LookForPassenger', {
-              carInfo: info,
-              selectedLocation: location,
-              onPassengerConfirm: () => {
-                navigation.navigate('DashboardScreen', { carInfo: info });
-              },
-            });
+            navigation.navigate('DashboardScreen', { carInfo: info, selectedLocation: location });
           },
         });
       },
